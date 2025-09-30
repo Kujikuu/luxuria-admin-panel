@@ -9,6 +9,7 @@ use App\Filament\Resources\Brokers\Schemas\BrokerForm;
 use App\Filament\Resources\Brokers\Tables\BrokersTable;
 use App\Models\Broker;
 use BackedEnum;
+use UnitEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -18,7 +19,17 @@ class BrokerResource extends Resource
 {
     protected static ?string $model = Broker::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUserGroup;
+
+    protected static ?string $navigationLabel = 'Real Estate Brokers';
+
+    protected static ?string $modelLabel = 'Broker';
+
+    protected static ?string $pluralModelLabel = 'Real Estate Brokers';
+
+    // protected static string|UnitEnum|null $navigationGroup = 'Real Estate Management';
+
+    protected static ?int $navigationSort = 2;
 
     public static function form(Schema $schema): Schema
     {

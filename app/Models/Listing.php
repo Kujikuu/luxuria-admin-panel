@@ -31,11 +31,14 @@ class Listing extends Model
     ];
 
     /**
-     * Get the images attribute with full absolute URLs.
+     * Get the images attribute with full absolute URLs for display purposes.
+     * This method is only used when explicitly called, not during form processing.
      */
-    public function getImagesAttribute($value): array
+    public function getImageUrlsAttribute(): array
     {
-        $images = json_decode($value, true) ?? [];
+        $images = $this->attributes['images'] ?? '[]';
+        $images = is_string($images) ? json_decode($images, true) : $images;
+        $images = $images ?? [];
         
         return array_map(function ($image) {
             // If the image is already a full URL, return as is

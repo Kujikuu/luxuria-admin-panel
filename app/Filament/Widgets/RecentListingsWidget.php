@@ -1,24 +1,29 @@
 <?php
 
-namespace App\Filament\Resources\Listings\Tables;
+namespace App\Filament\Widgets;
 
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
+use App\Models\Listing;
 use Filament\Actions\ViewAction;
 use Filament\Support\Enums\FontWeight;
+use Filament\Support\Icons\Heroicon;
+use Filament\Tables;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use Filament\Support\Icons\Heroicon;
+use Filament\Widgets\TableWidget as BaseWidget;
 
-class ListingsTable
+class RecentListingsWidget extends BaseWidget
 {
-    public static function configure(Table $table): Table
+    protected static ?string $heading = 'Recent Property Listings';
+
+    protected int | string | array $columnSpan = 'full';
+
+    public function table(Table $table): Table
     {
         return $table
+            ->query(
+                Listing::query()->latest()->limit(5)
+            )
             ->columns([
                 ImageColumn::make('images')
                     ->label('Image')
@@ -78,44 +83,11 @@ class ListingsTable
                     })
                     ->icon(Heroicon::OutlinedMapPin)
                     ->iconColor('gray'),
-                TextColumn::make('completion_year')
-                    ->label('Year Built')
-                    ->searchable()
-                    ->sortable()
-                    ->alignCenter(),
-                TextColumn::make('created_at')
-                    ->label('Listed Date')
-                    ->dateTime('M j, Y')
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->label('Last Updated')
-                    ->dateTime('M j, Y g:i A')
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->filters([
-                SelectFilter::make('availability')
-                    ->label('Availability Status')
-                    ->options([
-                        'rent' => 'For Rent',
-                        'sale' => 'For Sale',
-                    ])
-                    ->multiple(),
+            ->actions([
+                ViewAction::make()
+                    ->url(fn(Listing $record): string => route('filament.admin.resources.listings.view', $record)),
             ])
-            ->recordActions([
-                EditAction::make()
-                    ->iconButton(),
-                DeleteAction::make()
-                    ->iconButton(),
-            ])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
-            ])
-            ->defaultSort('created_at', 'desc')
-            ->striped()
-            ->paginated([10, 25, 50, 100]);
+            ->paginated(false);
     }
 }

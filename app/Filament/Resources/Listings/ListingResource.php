@@ -5,10 +5,12 @@ namespace App\Filament\Resources\Listings;
 use App\Filament\Resources\Listings\Pages\CreateListing;
 use App\Filament\Resources\Listings\Pages\EditListing;
 use App\Filament\Resources\Listings\Pages\ListListings;
+use App\Filament\Resources\Listings\Pages\ViewListings;
 use App\Filament\Resources\Listings\Schemas\ListingForm;
 use App\Filament\Resources\Listings\Tables\ListingsTable;
 use App\Models\Listing;
 use BackedEnum;
+use UnitEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -18,7 +20,17 @@ class ListingResource extends Resource
 {
     protected static ?string $model = Listing::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedHome;
+
+    protected static ?string $navigationLabel = 'Property Listings';
+
+    protected static ?string $modelLabel = 'Property Listing';
+
+    protected static ?string $pluralModelLabel = 'Property Listings';
+
+    // protected static string|UnitEnum|null $navigationGroup = 'Real Estate Management';
+
+    protected static ?int $navigationSort = 1;
 
     public static function form(Schema $schema): Schema
     {
@@ -43,6 +55,7 @@ class ListingResource extends Resource
             'index' => ListListings::route('/'),
             'create' => CreateListing::route('/create'),
             'edit' => EditListing::route('/{record}/edit'),
+            'view' => ViewListings::route('/{record}'),
         ];
     }
 }
